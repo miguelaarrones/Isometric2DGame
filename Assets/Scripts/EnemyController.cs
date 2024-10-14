@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private List<Transform> path;
     [SerializeField] private float detectionRadius = 3f;
-    [SerializeField] private float attackRadius = .75f;
+    [SerializeField] private float attackRadius = 1f;
     [SerializeField] private float hitDamage = 2f;
     [SerializeField] private float hitSpeed = 2f;
     [SerializeField] private float abilityActivationTime = 5f;
@@ -203,37 +203,39 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
-        if (Vector2.Distance(player.transform.position, transform.position) > attackRadius)
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, attackRadius, Vector3.zero, 10f, playerLayer);
+        if (hit)
         {
-            state = State.Patrol;
-            animator.SetBool("Attack", false);
-            return;
-        }
-
-        if (hitTimer > hitSpeed)
-        {
-            player.Hit(hitDamage);
-            hitTimer = 0;
-        }
-
-        hitTimer += Time.deltaTime;
-
-        if (abilityActivationTimer > abilityActivationTime)
-        {
-            SpeedAbility();
-
-            if (speedAbilityTimer > speedAbilityDuration)
+            if (hitTimer > hitSpeed)
             {
-                maxMovementSpeed = 5f;
-
-                abilityActivationTimer = 0;
-                speedAbilityTimer = 0;
+                player.Hit(hitDamage);
+                hitTimer = 0;
             }
 
-            speedAbilityTimer += Time.deltaTime;
-        }
+            hitTimer += Time.deltaTime;
 
-        abilityActivationTimer += Time.deltaTime;
+            if (abilityActivationTimer > abilityActivationTime)
+            {
+                SpeedAbility();
+
+                if (speedAbilityTimer > speedAbilityDuration)
+                {
+                    maxMovementSpeed = 5f;
+
+                    abilityActivationTimer = 0;
+                    speedAbilityTimer = 0;
+                }
+
+                speedAbilityTimer += Time.deltaTime;
+            }
+
+            abilityActivationTimer += Time.deltaTime;
+        } 
+        else
+        {
+            state = State.Chase;
+            animator.SetBool("Attack", false);
+        }   
     }
 
 }

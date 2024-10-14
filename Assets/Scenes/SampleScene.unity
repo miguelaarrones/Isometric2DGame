@@ -2190,9 +2190,9 @@ MonoBehaviour:
   - {fileID: 484062365}
   - {fileID: 274772100}
   detectionRadius: 5
-  attackRadius: 1
+  attackRadius: 1.2
   hitDamage: 2
-  hitSpeed: 2
+  hitSpeed: 0.75
   abilityActivationTime: 5
   speedAbilityAmount: 20
   speedAbilityDuration: 2
@@ -2943,7 +2943,7 @@ Transform:
   m_GameObject: {fileID: 1464911413}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.159382, y: 4.963339, z: 0.12112707}
+  m_LocalPosition: {x: 9.659382, y: 4.963339, z: 0.12112707}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

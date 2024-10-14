@@ -15,15 +15,18 @@ enum State
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] private float maxMovementSpeed = 5f;
+    [SerializeField] private float maxPatrolSpeed = 2f;
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private bool followPath = false;
     [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private List<Transform> path;
+    [SerializeField] private float detectionRadius = 3f;
+    [SerializeField] private float attackRadius = .75f;
 
     private State state;
     private Rigidbody2D rb;
-    private float detectionRadius = 3f;
-    private float attackRadius = .75f;
     private GameObject player;
+    private int currentPathPoint = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +64,11 @@ public class EnemyController : MonoBehaviour
             case State.Attack:
                 Attack();
                 if (!CheckPlayerInRadius())
+                {
+                    // TODO: Maybe I can do something better than that?
+                    rb.velocity = new Vector3(0, 0, 0);
                     state = State.Idle;
+                }
                 break;
             default:
                 Debug.LogError("ENEMY_CONTROLLER::UPDATE Invalid STATE");
@@ -71,7 +78,35 @@ public class EnemyController : MonoBehaviour
 
     private void FollowPath()
     {
-        throw new NotImplementedException();
+        if (path.Count < 0)
+        {
+            state = State.Idle;
+            return;
+        }
+
+        Vector2 dir = (path[currentPathPoint].position - transform.position).normalized;
+
+        Vector2 velocity = dir * movementSpeed;
+        rb.velocity = velocity;
+
+        if (rb.velocity.magnitude > maxPatrolSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxPatrolSpeed;
+        }
+        
+
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+
+        if (Vector2.Distance(path[currentPathPoint].position, transform.position) < 0.1)
+        {
+            // TODO: I know this could be better using modulo (&)
+            currentPathPoint++;
+            if (currentPathPoint == path.Count)
+                currentPathPoint = 0;
+
+            currentPathPoint = currentPathPoint % path.Count;
+        }
     }
 
     private bool CheckPlayerInRadius()
@@ -116,6 +151,11 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
+        if (Vector2.Distance(player.transform.position, transform.position) > attackRadius)
+        {
+            state = State.Patrol;
+            return;
+        }
         Debug.Log("ATTACKING PLAYER");
     }
 

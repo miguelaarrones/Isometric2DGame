@@ -6,11 +6,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float maxMovementSpeed = 10f;
+    [SerializeField] private float movementSpeed = 20f;
+
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private Vector2 input;
-    private float maxMovementSpeed = 10f;
-    private float movementSpeed = 20f;
 
     // Start is called before the first frame update
     void Start()

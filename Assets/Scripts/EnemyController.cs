@@ -143,10 +143,10 @@ public class EnemyController : MonoBehaviour
         {
             rb.velocity = rb.velocity.normalized * maxPatrolSpeed;
         }
-        
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        // TODO: Fix rotations and UI
+        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
         if (Vector2.Distance(path[currentPathPoint].position, transform.position) < 0.1)
         {
@@ -196,8 +196,9 @@ public class EnemyController : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        // TODO: Fix rotations and UI
+        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void Attack()

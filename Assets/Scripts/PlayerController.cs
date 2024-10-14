@@ -81,7 +81,8 @@ public class PlayerController : MonoBehaviour
             rb.velocity = rb.velocity.normalized * maxMovementSpeed;
         }
 
-        RotateTowardsMouse();
+        // TODO: Fix rotations wit UI.
+        // RotateTowardsMouse();
     }
 
     private void RotateTowardsMouse()

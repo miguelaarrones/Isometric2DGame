@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,24 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         input = playerInput.actions["move"].ReadValue<Vector2>();
+        ChangeSizeOnInput();
+    }
+
+    private void ChangeSizeOnInput()
+    {
+        Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+        if (input.x > 0.0f) // Is moving right
+            newScale.x = 1.4f;
+        if (input.x < 0.0f) // Is moving left
+            newScale.x = 0.6f;
+        if(input.y > 0.0f) // Is moving forward
+            newScale.y = 1.4f;
+        if(input.y < 0.0f) // Is moving backwards
+            newScale.y = 0.6f;
+        
+
+        transform.localScale = newScale;
     }
 
     // Update is called once per frame

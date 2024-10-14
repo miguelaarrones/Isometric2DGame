@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -10,17 +10,28 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float maxMovementSpeed = 10f;
     [SerializeField] private float movementSpeed = 20f;
+    [SerializeField] private Transform shootPoint;
+    [SerializeField] private Bullet bulletPrefab;
 
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private Vector2 input;
     private Vector3 mousePos;
 
+    private InputAction attackAction;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
+
+        // Find the action map and the click action
+        var actionMap = playerInput.actions.FindActionMap("gameplay");
+        attackAction = actionMap.FindAction("attack");
+
+        // Subscribe to the performed event
+        attackAction.performed += OnAttack;
     }
 
     private void Update()
@@ -72,5 +83,16 @@ public class PlayerController : MonoBehaviour
 
         float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        Bullet bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
+
+        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        mouseWorldPosition.z = 0;
+
+        Vector2 shootDirection = (mouseWorldPosition - shootPoint.position).normalized;
+        bullet.GetComponent<Rigidbody2D>().velocity = shootDirection * bullet.GetBulletSpeed();
     }
 }

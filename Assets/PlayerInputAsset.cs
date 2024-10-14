@@ -44,6 +44,15 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8e2b32e-707d-4176-8865-5640241eb8b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -178,6 +187,28 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""action"": ""mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7eccbf8d-285d-4bab-bcb5-122b7a8410ad"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3c333ae-9a5b-4f56-966f-ae88bfc676b3"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +219,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
         m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
         m_gameplay_mouse = m_gameplay.FindAction("mouse", throwIfNotFound: true);
+        m_gameplay_attack = m_gameplay.FindAction("attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,12 +283,14 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_gameplay_move;
     private readonly InputAction m_gameplay_mouse;
+    private readonly InputAction m_gameplay_attack;
     public struct GameplayActions
     {
         private @PlayerInputAsset m_Wrapper;
         public GameplayActions(@PlayerInputAsset wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_gameplay_move;
         public InputAction @mouse => m_Wrapper.m_gameplay_mouse;
+        public InputAction @attack => m_Wrapper.m_gameplay_attack;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -272,6 +306,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @mouse.started += instance.OnMouse;
             @mouse.performed += instance.OnMouse;
             @mouse.canceled += instance.OnMouse;
+            @attack.started += instance.OnAttack;
+            @attack.performed += instance.OnAttack;
+            @attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -282,6 +319,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @mouse.started -= instance.OnMouse;
             @mouse.performed -= instance.OnMouse;
             @mouse.canceled -= instance.OnMouse;
+            @attack.started -= instance.OnAttack;
+            @attack.performed -= instance.OnAttack;
+            @attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -303,5 +343,6 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

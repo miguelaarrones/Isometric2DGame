@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     private GameObject player;
     private int currentPathPoint = 0;
     private Animator animator;
+    private HealthSystem healthSystem;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class EnemyController : MonoBehaviour
         state = State.Idle;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        healthSystem = GetComponent<HealthSystem>();
     }
 
     // Update is called once per frame
@@ -98,6 +100,15 @@ public class EnemyController : MonoBehaviour
                 Debug.LogError("ENEMY_CONTROLLER::UPDATE Invalid STATE");
                 break;
         }
+
+        if (healthSystem.GetCurrentHealth() <= 0)
+            Die();
+    }
+
+    private void Die()
+    {
+        Debug.Log("Enemy died");
+        Destroy(gameObject);
     }
 
     private void FollowPath()

@@ -1231,7 +1231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMovementSpeed: 10
-  movementSpeed: 20
+  movementSpeed: 10
   shootPoint: {fileID: 136886323}
   bulletPrefab: {fileID: 2927387508410059808, guid: 87dadf3a83a0b9841923433d07ddbe6c, type: 3}
 --- !u!1 &619394800
@@ -1757,6 +1757,11 @@ MonoBehaviour:
   - {fileID: 274772100}
   detectionRadius: 5
   attackRadius: 1
+  hitDamage: 2
+  hitSpeed: 2
+  abilityActivationTime: 5
+  speedAbilityAmount: 20
+  speedAbilityDuration: 2
 --- !u!212 &1165444678
 SpriteRenderer:
   m_ObjectHideFlags: 0

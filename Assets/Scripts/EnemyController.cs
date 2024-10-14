@@ -24,6 +24,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float attackRadius = .75f;
     [SerializeField] private float hitDamage = 2f;
     [SerializeField] private float hitSpeed = 2f;
+    [SerializeField] private float abilityActivationTime = 5f;
+    [SerializeField] private float speedAbilityAmount = 20f;
+    [SerializeField] private float speedAbilityDuration = 2f;
+
 
     private State state;
     private Rigidbody2D rb;
@@ -33,6 +37,8 @@ public class EnemyController : MonoBehaviour
     private HealthSystem healthSystem;
 
     private float hitTimer;
+    private float abilityActivationTimer;
+    private float speedAbilityTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -107,6 +113,29 @@ public class EnemyController : MonoBehaviour
 
         if (healthSystem.GetCurrentHealth() <= 0)
             Die();
+
+        if (abilityActivationTimer > abilityActivationTime)
+        {
+            SpeedAbility();
+
+            if (speedAbilityTimer > speedAbilityDuration) 
+            {
+                maxMovementSpeed = 5f;
+
+                abilityActivationTimer = 0;
+                speedAbilityTimer = 0;
+            }
+
+            speedAbilityTimer += Time.deltaTime;
+        }
+
+        abilityActivationTimer += Time.deltaTime;
+
+    }
+
+    private void SpeedAbility()
+    {
+        maxMovementSpeed = speedAbilityAmount;
     }
 
     private void Die()

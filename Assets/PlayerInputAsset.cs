@@ -35,6 +35,15 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""73c4a3ec-1251-4b06-88af-56a26d28caf1"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -158,6 +167,17 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""action"": ""move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1550b7c4-f642-4ca7-91c8-e4b6e1e9cd31"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -167,6 +187,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         // gameplay
         m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
         m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
+        m_gameplay_mouse = m_gameplay.FindAction("mouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,11 +250,13 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_gameplay;
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_gameplay_move;
+    private readonly InputAction m_gameplay_mouse;
     public struct GameplayActions
     {
         private @PlayerInputAsset m_Wrapper;
         public GameplayActions(@PlayerInputAsset wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_gameplay_move;
+        public InputAction @mouse => m_Wrapper.m_gameplay_mouse;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -246,6 +269,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @move.started += instance.OnMove;
             @move.performed += instance.OnMove;
             @move.canceled += instance.OnMove;
+            @mouse.started += instance.OnMouse;
+            @mouse.performed += instance.OnMouse;
+            @mouse.canceled += instance.OnMouse;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -253,6 +279,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @move.started -= instance.OnMove;
             @move.performed -= instance.OnMove;
             @move.canceled -= instance.OnMove;
+            @mouse.started -= instance.OnMouse;
+            @mouse.performed -= instance.OnMouse;
+            @mouse.canceled -= instance.OnMouse;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -273,5 +302,6 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnMouse(InputAction.CallbackContext context);
     }
 }

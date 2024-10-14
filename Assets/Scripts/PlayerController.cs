@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private Vector2 input;
+    private Vector3 mousePos;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +25,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         input = playerInput.actions["move"].ReadValue<Vector2>();
-        ChangeSizeOnInput();
+
+        mousePos = playerInput.actions["mouse"].ReadValue<Vector2>();
+
+        // Removed for better development of the other features, as it was a Bonus point in Task 2
+        // ChangeSizeOnInput();
     }
 
     private void ChangeSizeOnInput()
@@ -53,5 +59,18 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = rb.velocity.normalized * maxMovementSpeed;
         }
+
+        RotateTowardsMouse();
+    }
+
+    private void RotateTowardsMouse()
+    {
+        mousePos.z = 0;
+        Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
+        mousePos.x = mousePos.x - objectPos.x;
+        mousePos.y = mousePos.y - objectPos.y;
+
+        float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 }

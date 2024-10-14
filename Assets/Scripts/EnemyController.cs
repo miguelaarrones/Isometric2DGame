@@ -113,24 +113,6 @@ public class EnemyController : MonoBehaviour
 
         if (healthSystem.GetCurrentHealth() <= 0)
             Die();
-
-        if (abilityActivationTimer > abilityActivationTime)
-        {
-            SpeedAbility();
-
-            if (speedAbilityTimer > speedAbilityDuration) 
-            {
-                maxMovementSpeed = 5f;
-
-                abilityActivationTimer = 0;
-                speedAbilityTimer = 0;
-            }
-
-            speedAbilityTimer += Time.deltaTime;
-        }
-
-        abilityActivationTimer += Time.deltaTime;
-
     }
 
     private void SpeedAbility()
@@ -234,6 +216,23 @@ public class EnemyController : MonoBehaviour
         }
 
         hitTimer += Time.deltaTime;
+
+        if (abilityActivationTimer > abilityActivationTime)
+        {
+            SpeedAbility();
+
+            if (speedAbilityTimer > speedAbilityDuration)
+            {
+                maxMovementSpeed = 5f;
+
+                abilityActivationTimer = 0;
+                speedAbilityTimer = 0;
+            }
+
+            speedAbilityTimer += Time.deltaTime;
+        }
+
+        abilityActivationTimer += Time.deltaTime;
     }
 
 }

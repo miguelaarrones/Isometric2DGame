@@ -19,12 +19,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 mousePos;
 
     private InputAction attackAction;
+    private HealthSystem healthSystem;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
+        healthSystem = GetComponent<HealthSystem>();
 
         // Find the action map and the click action
         var actionMap = playerInput.actions.FindActionMap("gameplay");
@@ -39,8 +41,16 @@ public class PlayerController : MonoBehaviour
         input = playerInput.actions["move"].ReadValue<Vector2>();
         mousePos = playerInput.actions["mouse"].ReadValue<Vector2>();
 
+        if (healthSystem.GetCurrentHealth() <= 0)
+            Die();
+
         // Removed for better development of the other features, as it was a Bonus point in Task 2
         // ChangeSizeOnInput();
+    }
+
+    private void Die()
+    {
+        Debug.Log("YOU DIED");
     }
 
     private void ChangeSizeOnInput()
@@ -94,5 +104,10 @@ public class PlayerController : MonoBehaviour
 
         Vector2 shootDirection = (mouseWorldPosition - shootPoint.position).normalized;
         bullet.GetComponent<Rigidbody2D>().velocity = shootDirection * bullet.GetBulletSpeed();
+    }
+
+    internal void Hit(float damage)
+    {
+        healthSystem.DecreaseCurrentHealth(damage);
     }
 }

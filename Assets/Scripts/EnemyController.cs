@@ -22,13 +22,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private List<Transform> path;
     [SerializeField] private float detectionRadius = 3f;
     [SerializeField] private float attackRadius = .75f;
+    [SerializeField] private float hitDamage = 2f;
+    [SerializeField] private float hitSpeed = 2f;
 
     private State state;
     private Rigidbody2D rb;
-    private GameObject player;
+    private PlayerController player;
     private int currentPathPoint = 0;
     private Animator animator;
     private HealthSystem healthSystem;
+
+    private float hitTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -149,7 +153,7 @@ public class EnemyController : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, detectionRadius, Vector3.zero, 10f, playerLayer);
         if (hit)
         {
-            player = hit.transform.gameObject;
+            player = hit.transform.GetComponent<PlayerController>();
             return true;
         }
         else
@@ -193,7 +197,14 @@ public class EnemyController : MonoBehaviour
             animator.SetBool("Attack", false);
             return;
         }
-        Debug.Log("ATTACKING PLAYER");
+
+        if (hitTimer > hitSpeed)
+        {
+            player.Hit(hitDamage);
+            hitTimer = 0;
+        }
+
+        hitTimer += Time.deltaTime;
     }
 
 }

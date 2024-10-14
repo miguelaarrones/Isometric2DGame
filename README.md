@@ -12,8 +12,8 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Why? It was a very simple task, just creating a GitHub repository and creating the Unity project.
 
 - Isometric Player movement and Input System: **3:30h**
-    - Did I completed the task as estimated?
-    - Why?
+    - Did I completed the task as estimated? It took less time than expected (1:30h).
+    - Why? The project is a protoype so I'm not polishing it a lot. And also, setting up the isometric view in 2D was easier than I expected if I did it correctly.
 
 - AI State Machine for Enemy Behavior: **6:00h**
     - Did I completed the task as estimated?

@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private Vector2 input;
-    private float movementSpeed = 10f;
+    private float maxMovementSpeed = 10f;
+    private float movementSpeed = 20f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,9 +26,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector2 currentPos = rb.position;
-        Vector2 move = input * movementSpeed * Time.deltaTime;
-        Vector2 newPos = currentPos + move;
-        rb.MovePosition(newPos);
+        Vector2 velocity = input * movementSpeed;
+        rb.velocity = velocity;
+
+        if (rb.velocity.magnitude > maxMovementSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxMovementSpeed;
+        }
     }
 }

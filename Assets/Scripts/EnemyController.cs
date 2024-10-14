@@ -27,12 +27,14 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D rb;
     private GameObject player;
     private int currentPathPoint = 0;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         state = State.Idle;
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -41,30 +43,52 @@ public class EnemyController : MonoBehaviour
         switch (state)
         {
             case State.Idle:
+                animator.SetBool("Idle", true);
+
                 if (followPath)
+                {
+                    animator.SetBool("Idle", false);
                     state = State.Patrol;
+                }
                 else
+                {
                     if (CheckPlayerInRadius())
-                    state = State.Chase;
+                    {
+                        animator.SetBool("Idle", false);
+                        state = State.Chase;
+                    }
+                }
                 break;
             case State.Patrol:
+                animator.SetBool("Patrol", true);
+
                 FollowPath();
                 if (CheckPlayerInRadius())
+                {
+                    animator.SetBool("Patrol", false);
                     state = State.Chase;
+                }
                 break;
             case State.Chase:
+                animator.SetBool("Chase", true);
+
                 ChasePlayer();
                 if (!CheckPlayerInRadius())
                 {
+                    animator.SetBool("Chase", false);
+                    
                     // TODO: Maybe I can do something better than that?
                     rb.velocity = new Vector3(0, 0, 0);
                     state = State.Idle;
                 }
                 break;
             case State.Attack:
+                animator.SetBool("Attack", true);
+
                 Attack();
                 if (!CheckPlayerInRadius())
                 {
+                    animator.SetBool("Attack", false);
                     // TODO: Maybe I can do something better than that?
                     rb.velocity = new Vector3(0, 0, 0);
                     state = State.Idle;
@@ -142,6 +166,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             state = State.Attack;
+            animator.SetBool("Chase", false);
             rb.velocity = Vector2.zero;
         }
 
@@ -154,6 +179,7 @@ public class EnemyController : MonoBehaviour
         if (Vector2.Distance(player.transform.position, transform.position) > attackRadius)
         {
             state = State.Patrol;
+            animator.SetBool("Attack", false);
             return;
         }
         Debug.Log("ATTACKING PLAYER");

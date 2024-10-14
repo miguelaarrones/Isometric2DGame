@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -25,7 +26,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         input = playerInput.actions["move"].ReadValue<Vector2>();
-
         mousePos = playerInput.actions["mouse"].ReadValue<Vector2>();
 
         // Removed for better development of the other features, as it was a Bonus point in Task 2

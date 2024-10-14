@@ -8,8 +8,8 @@ For this test, it was required to create a workflow diagram showing the tasks th
 
 ## General tasks time estimation
 - Unity Project and GitHub setup: **0:30h**
-    - Did I completed the task as estimated?
-    - Why?
+    - Did I completed the task as estimated? Yes.
+    - Why? It was a very simple task, just creating a GitHub repository and creating the Unity project.
 
 - Isometric Player movement and Input System: **3:30h**
     - Did I completed the task as estimated?

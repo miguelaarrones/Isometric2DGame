@@ -971,6 +971,7 @@ GameObject:
   - component: {fileID: 600500145}
   - component: {fileID: 600500144}
   - component: {fileID: 600500143}
+  - component: {fileID: 600500149}
   - component: {fileID: 600500148}
   m_Layer: 6
   m_Name: Player
@@ -1178,6 +1179,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &600500149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600500142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d27e2f276d7eca4d8d7df91a365e962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,6 +1575,7 @@ GameObject:
   - component: {fileID: 1165444678}
   - component: {fileID: 1165444677}
   - component: {fileID: 1165444676}
+  - component: {fileID: 1165444682}
   - component: {fileID: 1165444680}
   - component: {fileID: 1165444681}
   m_Layer: 0
@@ -1758,6 +1773,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1165444682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165444675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d27e2f276d7eca4d8d7df91a365e962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
 --- !u!1 &1284522624
 GameObject:
   m_ObjectHideFlags: 0

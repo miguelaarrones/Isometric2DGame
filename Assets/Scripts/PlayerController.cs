@@ -58,8 +58,7 @@ public class PlayerController : MonoBehaviour
         Vector3 positionOnCircle = transform.position + direction.normalized * attackPointRadius;
         attackPoint.position = positionOnCircle;
 
-        // Removed for better development of the other features, as it was a Bonus point in Task 2
-        // ChangeSizeOnInput();
+        ChangeColorOnInput();
     }
 
     private void Die()
@@ -67,21 +66,16 @@ public class PlayerController : MonoBehaviour
         Debug.Log("YOU DIED");
     }
 
-    private void ChangeSizeOnInput()
+    private void ChangeColorOnInput()
     {
-        Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
-
         if (input.x > 0.0f) // Is moving right
-            newScale.x = 1.4f;
+            sprite.color = Color.cyan;
         if (input.x < 0.0f) // Is moving left
-            newScale.x = 0.6f;
-        if(input.y > 0.0f) // Is moving forward
-            newScale.y = 1.4f;
-        if(input.y < 0.0f) // Is moving backwards
-            newScale.y = 0.6f;
-        
-
-        transform.localScale = newScale;
+            sprite.color = Color.magenta;
+        if (input.y > 0.0f) // Is moving forward
+            sprite.color = Color.blue;
+        if (input.y < 0.0f) // Is moving backwards
+            sprite.color = Color.green;
     }
 
     // Update is called once per frame

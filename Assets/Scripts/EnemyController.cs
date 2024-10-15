@@ -21,13 +21,25 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private List<Transform> path;
     [SerializeField] private float detectionRadius = 3f;
-    [SerializeField] private float attackRadius = .75f;
+    [SerializeField] private float attackRadius = 1f;
+    [SerializeField] private float hitDamage = 2f;
+    [SerializeField] private float hitSpeed = 2f;
+    [SerializeField] private float abilityActivationTime = 5f;
+    [SerializeField] private float speedAbilityAmount = 20f;
+    [SerializeField] private float speedAbilityDuration = 2f;
+    [SerializeField] private ParticleSystem deathVFX;
+
 
     private State state;
     private Rigidbody2D rb;
-    private GameObject player;
+    private PlayerController player;
     private int currentPathPoint = 0;
     private Animator animator;
+    private HealthSystem healthSystem;
+
+    private float hitTimer;
+    private float abilityActivationTimer;
+    private float speedAbilityTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +47,7 @@ public class EnemyController : MonoBehaviour
         state = State.Idle;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        healthSystem = GetComponent<HealthSystem>();
     }
 
     // Update is called once per frame
@@ -98,6 +111,20 @@ public class EnemyController : MonoBehaviour
                 Debug.LogError("ENEMY_CONTROLLER::UPDATE Invalid STATE");
                 break;
         }
+
+        if (healthSystem.GetCurrentHealth() <= 0)
+            Die();
+    }
+
+    private void SpeedAbility()
+    {
+        maxMovementSpeed = speedAbilityAmount;
+    }
+
+    private void Die()
+    {
+        Instantiate(deathVFX, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     private void FollowPath()
@@ -117,10 +144,10 @@ public class EnemyController : MonoBehaviour
         {
             rb.velocity = rb.velocity.normalized * maxPatrolSpeed;
         }
-        
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        // TODO: Fix rotations and UI
+        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
         if (Vector2.Distance(path[currentPathPoint].position, transform.position) < 0.1)
         {
@@ -138,7 +165,7 @@ public class EnemyController : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, detectionRadius, Vector3.zero, 10f, playerLayer);
         if (hit)
         {
-            player = hit.transform.gameObject;
+            player = hit.transform.GetComponent<PlayerController>();
             return true;
         }
         else
@@ -170,19 +197,51 @@ public class EnemyController : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        // TODO: Fix rotations and UI
+        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void Attack()
     {
-        if (Vector2.Distance(player.transform.position, transform.position) > attackRadius)
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, attackRadius, Vector3.zero, 10f, playerLayer);
+        if (hit)
         {
-            state = State.Patrol;
+            if (hitTimer > hitSpeed)
+            {
+                player.Hit(hitDamage);
+                hitTimer = 0;
+            }
+
+            hitTimer += Time.deltaTime;
+
+            if (abilityActivationTimer > abilityActivationTime)
+            {
+                SpeedAbility();
+
+                if (speedAbilityTimer > speedAbilityDuration)
+                {
+                    maxMovementSpeed = 5f;
+
+                    abilityActivationTimer = 0;
+                    speedAbilityTimer = 0;
+                }
+
+                speedAbilityTimer += Time.deltaTime;
+            }
+
+            abilityActivationTimer += Time.deltaTime;
+        } 
+        else
+        {
+            state = State.Chase;
             animator.SetBool("Attack", false);
-            return;
-        }
-        Debug.Log("ATTACKING PLAYER");
+        }   
+    }
+
+    public void Hit(float damage)
+    {
+        healthSystem.DecreaseCurrentHealth(damage);
     }
 
 }

@@ -2257,6 +2257,7 @@ MonoBehaviour:
   abilityActivationTime: 5
   speedAbilityAmount: 20
   speedAbilityDuration: 2
+  deathVFX: {fileID: 736719247511705545, guid: 8bbf5d1807278cc489286cb8e2ff265b, type: 3}
 --- !u!212 &1165444678
 SpriteRenderer:
   m_ObjectHideFlags: 0

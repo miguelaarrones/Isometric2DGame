@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float abilityActivationTime = 5f;
     [SerializeField] private float speedAbilityAmount = 20f;
     [SerializeField] private float speedAbilityDuration = 2f;
+    [SerializeField] private ParticleSystem deathVFX;
 
 
     private State state;
@@ -122,7 +123,7 @@ public class EnemyController : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Enemy died");
+        Instantiate(deathVFX, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 

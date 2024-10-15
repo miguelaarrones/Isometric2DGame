@@ -25,8 +25,8 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Why? If I'm being honest, I'm actually fast prototyping everything, I think it will all add up in time once I start polishing and debugging.
 
 - Simple Inventory System: **5:00h**
-    - Did I completed the task as estimated?
-    - Why?
+    - Did I completed the task as estimated? I completed the mandatory tasks and one bonus task in half the time I expected. **Total time: 2:30**
+    - Why? The UI is something that I'm not really good at, I had some trouble thinking on how to make it work and the user being able to interact with it. I thought I could do the other Bonus tasks, but being realistic, after my work in this section, I'm not sure if I'm able to do it.
     
 - Dialogue System with a custom Editor Tool: **11:00h**
     - Did I completed the task as estimated?

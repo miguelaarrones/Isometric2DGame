@@ -9,36 +9,46 @@ using static UnityEngine.Rendering.HableCurve;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Settings")]
     [SerializeField] private float maxMovementSpeed = 10f;
     [SerializeField] private float movementSpeed = 20f;
+
+    [Header("Attack Settings")]
     [SerializeField] private Transform attackPoint;
     [SerializeField] private Bullet bulletPrefab;
-    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float meleeDamage = 4f;
+    [SerializeField] private LayerMask enemyLayer;
 
     private Rigidbody2D rb;
-    private PlayerInput playerInput;
-    private Vector2 input;
-    private Vector3 mousePos;
-    private float attackPointRadius = 1.5f;
+    private SpriteRenderer sprite;
 
+    private PlayerInput playerInput;
     private InputAction attackAction;
     private InputAction meleeAttackAction;
+
     private HealthSystem healthSystem;
 
-    // Start is called before the first frame update
-    void Start()
+    private Vector2 input;
+    private Vector3 mousePos;
+
+    // Distance from the center of the player to the attack point
+    private float attackPointRadius = 1.5f;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        playerInput = GetComponent<PlayerInput>();
-        healthSystem = GetComponent<HealthSystem>();
+        sprite = GetComponent<SpriteRenderer>();
 
-        // Find the action map and the click action
+        playerInput = GetComponent<PlayerInput>();
+        
+        healthSystem = GetComponent<HealthSystem>();
+        
+        // Find the action map and the attack actions
         var actionMap = playerInput.actions.FindActionMap("player");
         attackAction = actionMap.FindAction("attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
 
-        // Subscribe to the performed event
+        // Subscribe to the performed events
         attackAction.performed += OnAttack;
         meleeAttackAction.performed += OnMeleeAttack;
     }
@@ -58,35 +68,30 @@ public class PlayerController : MonoBehaviour
         Vector3 positionOnCircle = transform.position + direction.normalized * attackPointRadius;
         attackPoint.position = positionOnCircle;
 
-        // Removed for better development of the other features, as it was a Bonus point in Task 2
-        // ChangeSizeOnInput();
+        ChangeColorOnInput();
     }
 
     private void Die()
     {
+        // TODO: Something cool when player death
         Debug.Log("YOU DIED");
     }
 
-    private void ChangeSizeOnInput()
+    private void ChangeColorOnInput()
     {
-        Vector3 newScale = new Vector3(1.0f, 1.0f, 1.0f);
-
         if (input.x > 0.0f) // Is moving right
-            newScale.x = 1.4f;
+            sprite.color = Color.cyan;
         if (input.x < 0.0f) // Is moving left
-            newScale.x = 0.6f;
-        if(input.y > 0.0f) // Is moving forward
-            newScale.y = 1.4f;
-        if(input.y < 0.0f) // Is moving backwards
-            newScale.y = 0.6f;
-        
-
-        transform.localScale = newScale;
+            sprite.color = Color.magenta;
+        if (input.y > 0.0f) // Is moving forward
+            sprite.color = Color.blue;
+        if (input.y < 0.0f) // Is moving backwards
+            sprite.color = Color.green;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
+        // TODO: Does this make sense?
         Vector2 velocity = input * movementSpeed;
         rb.velocity = velocity;
 
@@ -126,28 +131,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(attackPoint.position, 1f, Vector3.zero, 10f, enemyLayer);
         if (hit)
         {
-            Debug.Log("Hit enemy: " + hit.transform.name);
             hit.transform.GetComponent<EnemyController>().Hit(meleeDamage);
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (attackPoint == null)
-            return;
-
-        Gizmos.color = Color.green;
-
-        // Draw a circle around the center object
-        float angleStep = 360f / 36;
-        Vector3 prevPoint = attackPoint.position + new Vector3(.5f, 0, 0);
-
-        for (int i = 1; i <= 36; i++)
-        {
-            float angle = i * angleStep * Mathf.Deg2Rad;
-            Vector3 newPoint = attackPoint.position + new Vector3(Mathf.Cos(angle) * .5f, Mathf.Sin(angle) * .5f, 0);
-            Gizmos.DrawLine(prevPoint, newPoint);
-            prevPoint = newPoint;
         }
     }
 

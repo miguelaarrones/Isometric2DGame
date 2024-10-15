@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float destructionTime;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float bulletDamage;
+    [SerializeField] private float destructionTime;
+
     private float timer;
 
     // Update is called once per frame

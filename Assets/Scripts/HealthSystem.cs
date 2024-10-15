@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class HealthSystem : MonoBehaviour
 {
+    [Header("Main Settings")]
     [SerializeField] private float maxHealth;
+    
+    [Header("UI Settings")]
     [SerializeField] private RectTransform background;
     [SerializeField] private Image healthBar;
     [SerializeField] private Vector3 positionOffset = new Vector3(-0.5f, 0.5f, 0.0f);

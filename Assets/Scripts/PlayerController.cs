@@ -1,10 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float maxMovementSpeed = 10f;
 
     [Header("Attack Settings")]
     [SerializeField] private Transform attackPoint;
@@ -12,20 +15,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float meleeDamage = 4f;
     [SerializeField] private LayerMask enemyLayer;
 
+    [Header("Other Settings")]
+    [SerializeField] private float pickupRadius = 1f;
+    [SerializeField] private LayerMask pickupLayer;
+
+    [Header("UI Settings")]
+    [SerializeField] private GameObject inventoryUI;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
 
     private PlayerInput playerInput;
     private InputAction attackAction;
     private InputAction meleeAttackAction;
+    private InputAction pickupAction;
+    private InputAction openInventoryAction;
 
     private HealthSystem healthSystem;
 
     private Vector2 input;
     private Vector3 mousePos;
 
+    private float currentSpeed;
+    private float potionSpeedMaxTime = 3;
+    private float potionSpeedTimer = 0;
+
     // Distance from the center of the player to the attack point
     private float attackPointRadius = 1.5f;
+
+    private List<PickupItem> inventoryList = new List<PickupItem>();
+    private bool isInventoryOpen = false;
 
     private void Start()
     {
@@ -35,15 +54,21 @@ public class PlayerController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         
         healthSystem = GetComponent<HealthSystem>();
-        
+
+        currentSpeed = maxMovementSpeed;
+
         // Find the action map and the attack actions
         var actionMap = playerInput.actions.FindActionMap("player");
         attackAction = actionMap.FindAction("attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
+        pickupAction = actionMap.FindAction("pickup");
+        openInventoryAction = actionMap.FindAction("inventory");
 
         // Subscribe to the performed events
         attackAction.performed += OnAttack;
         meleeAttackAction.performed += OnMeleeAttack;
+        pickupAction.performed += OnPickup;
+        openInventoryAction.performed += OnOpenInventory;
     }
 
     private void Update()
@@ -62,6 +87,17 @@ public class PlayerController : MonoBehaviour
         attackPoint.position = positionOnCircle;
 
         ChangeColorOnInput();
+
+        // Speed increased using potions
+        if (currentSpeed > maxMovementSpeed)
+        {
+            if (potionSpeedTimer > potionSpeedMaxTime)
+            {
+                currentSpeed = maxMovementSpeed;
+            }
+
+            potionSpeedTimer += Time.deltaTime;
+        }
     }
 
     private void Die()
@@ -84,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 velocity = input * movementSpeed;
+        Vector2 velocity = input * currentSpeed;
         rb.velocity = velocity;
 
         // TODO: Fix rotations wit UI.
@@ -122,8 +158,90 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnPickup(InputAction.CallbackContext context)
+    {
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1f, Vector3.zero, 10f, pickupLayer);
+        if (hit)
+        {
+            PickupItem item = hit.transform.GetComponent<PickupItem>();
+            inventoryList.Add(item);
+            item.gameObject.SetActive(false);
+
+            if (isInventoryOpen)
+                inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+        }
+    }
+    
+    private void OnOpenInventory(InputAction.CallbackContext context)
+    {
+        if (!isInventoryOpen)
+        {
+            isInventoryOpen = true;
+            inventoryUI.SetActive(true);
+            inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+        }
+        else
+        {
+            inventoryUI.SetActive(false);
+            isInventoryOpen = false;
+        }
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (transform.position == null)
+            return;
+
+        Gizmos.color = Color.green;
+
+        // Draw a circle around the center object
+        float angleStep = 360f / 36;
+        Vector3 prevPoint = transform.position + new Vector3(pickupRadius, 0, 0);
+
+        for (int i = 1; i <= 36; i++)
+        {
+            float angle = i * angleStep * Mathf.Deg2Rad;
+            Vector3 newPoint = transform.position + new Vector3(Mathf.Cos(angle) * pickupRadius, Mathf.Sin(angle) * pickupRadius, 0);
+            Gizmos.DrawLine(prevPoint, newPoint);
+            prevPoint = newPoint;
+        }
+    }
+
     public void Hit(float damage)
     {
         healthSystem.DecreaseCurrentHealth(damage);
+    }
+
+    public List<PickupItem> GetInventoryItems() => inventoryList;
+
+    internal void UseItem(PickupType pickupType)
+    {
+        PickupItem item = inventoryList.Where(x => x.GetPickupType() == pickupType).First();
+        if (item == null) return;
+
+        switch (pickupType)
+        {
+            case PickupType.HealthPotion:
+                if (healthSystem.GetCurrentHealth() <= healthSystem.GetMaxHealth())
+                {
+                    healthSystem.IncreaseCurrentHealth(item.GetAmount());
+                    inventoryList.Remove(item);
+                    Destroy(item);
+                    if (isInventoryOpen)
+                        inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+                }
+                break;
+            case PickupType.SpeedPotion:
+                if (currentSpeed <= maxMovementSpeed)
+                {
+                    currentSpeed += item.GetAmount();
+                    inventoryList.Remove(item);
+                    Destroy(item);
+                    if (isInventoryOpen)
+                        inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+                }
+                break;
+        }
     }
 }

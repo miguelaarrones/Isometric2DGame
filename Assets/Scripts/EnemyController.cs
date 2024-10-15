@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
-
 
 enum State
 {
@@ -15,8 +11,7 @@ enum State
 public class EnemyController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float maxMovementSpeed = 5f;
-    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float maxPatrolSpeed = 2f;
     [SerializeField] private bool followPath = false;
     [SerializeField] private List<Transform> path;
@@ -200,7 +195,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            maxMovementSpeed = 5f;
+            movementSpeed = 5f;
         }
 
         // TODO: Fix rotations and UI
@@ -210,18 +205,13 @@ public class EnemyController : MonoBehaviour
 
     private void SuperSpeedAbility()
     {
-        maxMovementSpeed = superSpeedAbilityAmount;
+        movementSpeed = superSpeedAbilityAmount;
     }
 
     private void Move(Vector2 dir)
     {
         Vector2 velocity = dir * movementSpeed;
         rb.velocity = velocity;
-
-        if (rb.velocity.magnitude > maxMovementSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxMovementSpeed;
-        }
     }
 
     private void Attack()

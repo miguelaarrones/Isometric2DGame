@@ -1,17 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.HableCurve;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float maxMovementSpeed = 10f;
-    [SerializeField] private float movementSpeed = 20f;
+    [SerializeField] private float movementSpeed = 10f;
 
     [Header("Attack Settings")]
     [SerializeField] private Transform attackPoint;
@@ -91,14 +84,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // TODO: Does this make sense?
         Vector2 velocity = input * movementSpeed;
         rb.velocity = velocity;
-
-        if (rb.velocity.magnitude > maxMovementSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxMovementSpeed;
-        }
 
         // TODO: Fix rotations wit UI.
         // RotateTowardsMouse();

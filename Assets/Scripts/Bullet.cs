@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour
 
         if (enemy != null)
         {
-            enemy.GetComponent<HealthSystem>().DecreaseCurrentHealth(bulletDamage);
+            enemy.GetComponent<EnemyController>().Hit(bulletDamage);
         }
     }
 }

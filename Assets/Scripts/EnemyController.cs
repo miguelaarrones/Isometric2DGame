@@ -238,4 +238,9 @@ public class EnemyController : MonoBehaviour
         }   
     }
 
+    public void Hit(float damage)
+    {
+        healthSystem.DecreaseCurrentHealth(damage);
+    }
+
 }

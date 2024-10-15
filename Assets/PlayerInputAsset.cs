@@ -71,6 +71,15 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""62433b5d-3e1a-4424-bd3e-68b528f885bf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -227,6 +236,17 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""action"": ""pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6eefd0cc-31f6-4612-8626-aca27d25acdb"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -240,6 +260,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         m_player_melee_attack = m_player.FindAction("melee_attack", throwIfNotFound: true);
         m_player_attack = m_player.FindAction("attack", throwIfNotFound: true);
         m_player_pickup = m_player.FindAction("pickup", throwIfNotFound: true);
+        m_player_inventory = m_player.FindAction("inventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +327,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_melee_attack;
     private readonly InputAction m_player_attack;
     private readonly InputAction m_player_pickup;
+    private readonly InputAction m_player_inventory;
     public struct PlayerActions
     {
         private @PlayerInputAsset m_Wrapper;
@@ -315,6 +337,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         public InputAction @melee_attack => m_Wrapper.m_player_melee_attack;
         public InputAction @attack => m_Wrapper.m_player_attack;
         public InputAction @pickup => m_Wrapper.m_player_pickup;
+        public InputAction @inventory => m_Wrapper.m_player_inventory;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,6 +362,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @pickup.started += instance.OnPickup;
             @pickup.performed += instance.OnPickup;
             @pickup.canceled += instance.OnPickup;
+            @inventory.started += instance.OnInventory;
+            @inventory.performed += instance.OnInventory;
+            @inventory.canceled += instance.OnInventory;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -358,6 +384,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @pickup.started -= instance.OnPickup;
             @pickup.performed -= instance.OnPickup;
             @pickup.canceled -= instance.OnPickup;
+            @inventory.started -= instance.OnInventory;
+            @inventory.performed -= instance.OnInventory;
+            @inventory.canceled -= instance.OnInventory;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -382,5 +411,6 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         void OnMelee_attack(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

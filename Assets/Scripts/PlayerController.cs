@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float pickupRadius = 1f;
     [SerializeField] private LayerMask pickupLayer;
 
+    [Header("UI Settings")]
+    [SerializeField] private GameObject inventoryUI;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
 
@@ -24,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private InputAction attackAction;
     private InputAction meleeAttackAction;
     private InputAction pickupAction;
+    private InputAction openInventoryAction;
 
     private HealthSystem healthSystem;
 
@@ -34,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private float attackPointRadius = 1.5f;
 
     private List<PickupItem> inventoryList = new List<PickupItem>();
+    private bool isInventoryOpen = false;
 
     private void Start()
     {
@@ -49,11 +55,13 @@ public class PlayerController : MonoBehaviour
         attackAction = actionMap.FindAction("attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
         pickupAction = actionMap.FindAction("pickup");
+        openInventoryAction = actionMap.FindAction("inventory");
 
         // Subscribe to the performed events
         attackAction.performed += OnAttack;
         meleeAttackAction.performed += OnMeleeAttack;
         pickupAction.performed += OnPickup;
+        openInventoryAction.performed += OnOpenInventory;
     }
 
     private void Update()
@@ -139,9 +147,28 @@ public class PlayerController : MonoBehaviour
         {
             PickupItem item = hit.transform.GetComponent<PickupItem>();
             inventoryList.Add(item);
-            item.RemovePickup();
+            item.gameObject.SetActive(false);
+
+            if (isInventoryOpen)
+                inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
         }
     }
+    
+    private void OnOpenInventory(InputAction.CallbackContext context)
+    {
+        if (!isInventoryOpen)
+        {
+            isInventoryOpen = true;
+            inventoryUI.SetActive(true);
+            inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+        }
+        else
+        {
+            inventoryUI.SetActive(false);
+            isInventoryOpen = false;
+        }
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -167,4 +194,6 @@ public class PlayerController : MonoBehaviour
     {
         healthSystem.DecreaseCurrentHealth(damage);
     }
+
+    public List<PickupItem> GetInventoryItems() => inventoryList;
 }

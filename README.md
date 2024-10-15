@@ -32,3 +32,6 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Did I completed the task as estimated?
     - Why?
 
+## Polishing
+- First iteration time: **0:45h**
+    - Did some code refactor and file organization to make everything more clear.

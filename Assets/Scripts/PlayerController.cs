@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,12 +13,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float meleeDamage = 4f;
     [SerializeField] private LayerMask enemyLayer;
 
+    [Header("Other Settings")]
+    [SerializeField] private float pickupRadius = 1f;
+    [SerializeField] private LayerMask pickupLayer;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
 
     private PlayerInput playerInput;
     private InputAction attackAction;
     private InputAction meleeAttackAction;
+    private InputAction pickupAction;
 
     private HealthSystem healthSystem;
 
@@ -26,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     // Distance from the center of the player to the attack point
     private float attackPointRadius = 1.5f;
+
+    private List<PickupItem> inventoryList = new List<PickupItem>();
 
     private void Start()
     {
@@ -40,10 +48,12 @@ public class PlayerController : MonoBehaviour
         var actionMap = playerInput.actions.FindActionMap("player");
         attackAction = actionMap.FindAction("attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
+        pickupAction = actionMap.FindAction("pickup");
 
         // Subscribe to the performed events
         attackAction.performed += OnAttack;
         meleeAttackAction.performed += OnMeleeAttack;
+        pickupAction.performed += OnPickup;
     }
 
     private void Update()
@@ -119,6 +129,37 @@ public class PlayerController : MonoBehaviour
         if (hit)
         {
             hit.transform.GetComponent<EnemyController>().Hit(meleeDamage);
+        }
+    }
+
+    private void OnPickup(InputAction.CallbackContext context)
+    {
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1f, Vector3.zero, 10f, pickupLayer);
+        if (hit)
+        {
+            PickupItem item = hit.transform.GetComponent<PickupItem>();
+            inventoryList.Add(item);
+            item.RemovePickup();
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (transform.position == null)
+            return;
+
+        Gizmos.color = Color.green;
+
+        // Draw a circle around the center object
+        float angleStep = 360f / 36;
+        Vector3 prevPoint = transform.position + new Vector3(pickupRadius, 0, 0);
+
+        for (int i = 1; i <= 36; i++)
+        {
+            float angle = i * angleStep * Mathf.Deg2Rad;
+            Vector3 newPoint = transform.position + new Vector3(Mathf.Cos(angle) * pickupRadius, Mathf.Sin(angle) * pickupRadius, 0);
+            Gizmos.DrawLine(prevPoint, newPoint);
+            prevPoint = newPoint;
         }
     }
 

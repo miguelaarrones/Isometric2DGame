@@ -147,7 +147,7 @@ public class EnemyController : MonoBehaviour
         }
 
         Vector2 dir = (path[currentPathPoint].position - transform.position).normalized;
-        Move(dir);
+        Move(dir, maxPatrolSpeed);
 
         // TODO: Fix rotations and UI
         //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -179,7 +179,7 @@ public class EnemyController : MonoBehaviour
     private void ChasePlayer()
     {
         Vector2 dir = (player.transform.position - transform.position).normalized;
-        Move(dir);
+        Move(dir, movementSpeed);
 
         // Player inside attack radius
         if (Vector2.Distance(player.transform.position, transform.position) <= attackRadius)
@@ -208,9 +208,9 @@ public class EnemyController : MonoBehaviour
         movementSpeed = superSpeedAbilityAmount;
     }
 
-    private void Move(Vector2 dir)
+    private void Move(Vector2 dir, float speed)
     {
-        Vector2 velocity = dir * movementSpeed;
+        Vector2 velocity = dir * speed;
         rb.velocity = velocity;
     }
 

@@ -24,7 +24,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     ""name"": ""PlayerInputAsset"",
     ""maps"": [
         {
-            ""name"": ""gameplay"",
+            ""name"": ""player"",
             ""id"": ""1b6b1d47-0cb6-40dd-b689-417fbe6bd5a1"",
             ""actions"": [
                 {
@@ -40,15 +40,24 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""name"": ""mouse"",
                     ""type"": ""Value"",
                     ""id"": ""73c4a3ec-1251-4b06-88af-56a26d28caf1"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""attack"",
+                    ""name"": ""melee_attack"",
                     ""type"": ""Button"",
                     ""id"": ""a8e2b32e-707d-4176-8865-5640241eb8b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a5c168d-a130-475e-b266-e07c1291d01b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -168,23 +177,23 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""42933e54-9854-41fc-bbe6-a036dcb7daa0"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1550b7c4-f642-4ca7-91c8-e4b6e1e9cd31"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3c333ae-9a5b-4f56-966f-ae88bfc676b3"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""melee_attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -198,28 +207,18 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""action"": ""attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f3c333ae-9a5b-4f56-966f-ae88bfc676b3"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // gameplay
-        m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
-        m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
-        m_gameplay_mouse = m_gameplay.FindAction("mouse", throwIfNotFound: true);
-        m_gameplay_attack = m_gameplay.FindAction("attack", throwIfNotFound: true);
+        // player
+        m_player = asset.FindActionMap("player", throwIfNotFound: true);
+        m_player_move = m_player.FindAction("move", throwIfNotFound: true);
+        m_player_mouse = m_player.FindAction("mouse", throwIfNotFound: true);
+        m_player_melee_attack = m_player.FindAction("melee_attack", throwIfNotFound: true);
+        m_player_attack = m_player.FindAction("attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -278,40 +277,45 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // gameplay
-    private readonly InputActionMap m_gameplay;
-    private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
-    private readonly InputAction m_gameplay_move;
-    private readonly InputAction m_gameplay_mouse;
-    private readonly InputAction m_gameplay_attack;
-    public struct GameplayActions
+    // player
+    private readonly InputActionMap m_player;
+    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
+    private readonly InputAction m_player_move;
+    private readonly InputAction m_player_mouse;
+    private readonly InputAction m_player_melee_attack;
+    private readonly InputAction m_player_attack;
+    public struct PlayerActions
     {
         private @PlayerInputAsset m_Wrapper;
-        public GameplayActions(@PlayerInputAsset wrapper) { m_Wrapper = wrapper; }
-        public InputAction @move => m_Wrapper.m_gameplay_move;
-        public InputAction @mouse => m_Wrapper.m_gameplay_mouse;
-        public InputAction @attack => m_Wrapper.m_gameplay_attack;
-        public InputActionMap Get() { return m_Wrapper.m_gameplay; }
+        public PlayerActions(@PlayerInputAsset wrapper) { m_Wrapper = wrapper; }
+        public InputAction @move => m_Wrapper.m_player_move;
+        public InputAction @mouse => m_Wrapper.m_player_mouse;
+        public InputAction @melee_attack => m_Wrapper.m_player_melee_attack;
+        public InputAction @attack => m_Wrapper.m_player_attack;
+        public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
-        public void AddCallbacks(IGameplayActions instance)
+        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerActions instance)
         {
-            if (instance == null || m_Wrapper.m_GameplayActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_GameplayActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
             @move.started += instance.OnMove;
             @move.performed += instance.OnMove;
             @move.canceled += instance.OnMove;
             @mouse.started += instance.OnMouse;
             @mouse.performed += instance.OnMouse;
             @mouse.canceled += instance.OnMouse;
+            @melee_attack.started += instance.OnMelee_attack;
+            @melee_attack.performed += instance.OnMelee_attack;
+            @melee_attack.canceled += instance.OnMelee_attack;
             @attack.started += instance.OnAttack;
             @attack.performed += instance.OnAttack;
             @attack.canceled += instance.OnAttack;
         }
 
-        private void UnregisterCallbacks(IGameplayActions instance)
+        private void UnregisterCallbacks(IPlayerActions instance)
         {
             @move.started -= instance.OnMove;
             @move.performed -= instance.OnMove;
@@ -319,30 +323,34 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @mouse.started -= instance.OnMouse;
             @mouse.performed -= instance.OnMouse;
             @mouse.canceled -= instance.OnMouse;
+            @melee_attack.started -= instance.OnMelee_attack;
+            @melee_attack.performed -= instance.OnMelee_attack;
+            @melee_attack.canceled -= instance.OnMelee_attack;
             @attack.started -= instance.OnAttack;
             @attack.performed -= instance.OnAttack;
             @attack.canceled -= instance.OnAttack;
         }
 
-        public void RemoveCallbacks(IGameplayActions instance)
+        public void RemoveCallbacks(IPlayerActions instance)
         {
-            if (m_Wrapper.m_GameplayActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IGameplayActions instance)
+        public void SetCallbacks(IPlayerActions instance)
         {
-            foreach (var item in m_Wrapper.m_GameplayActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_GameplayActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public GameplayActions @gameplay => new GameplayActions(this);
-    public interface IGameplayActions
+    public PlayerActions @player => new PlayerActions(this);
+    public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
+        void OnMelee_attack(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
     }
 }

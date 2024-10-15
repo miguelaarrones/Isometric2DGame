@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float movementSpeed = 10f;
+    [SerializeField] private float maxMovementSpeed = 10f;
 
     [Header("Attack Settings")]
     [SerializeField] private Transform attackPoint;
@@ -35,6 +36,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 input;
     private Vector3 mousePos;
 
+    private float currentSpeed;
+    private float potionSpeedMaxTime = 3;
+    private float potionSpeedTimer = 0;
+
     // Distance from the center of the player to the attack point
     private float attackPointRadius = 1.5f;
 
@@ -49,7 +54,9 @@ public class PlayerController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         
         healthSystem = GetComponent<HealthSystem>();
-        
+
+        currentSpeed = maxMovementSpeed;
+
         // Find the action map and the attack actions
         var actionMap = playerInput.actions.FindActionMap("player");
         attackAction = actionMap.FindAction("attack");
@@ -80,6 +87,17 @@ public class PlayerController : MonoBehaviour
         attackPoint.position = positionOnCircle;
 
         ChangeColorOnInput();
+
+        // Speed increased using potions
+        if (currentSpeed > maxMovementSpeed)
+        {
+            if (potionSpeedTimer > potionSpeedMaxTime)
+            {
+                currentSpeed = maxMovementSpeed;
+            }
+
+            potionSpeedTimer += Time.deltaTime;
+        }
     }
 
     private void Die()
@@ -102,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 velocity = input * movementSpeed;
+        Vector2 velocity = input * currentSpeed;
         rb.velocity = velocity;
 
         // TODO: Fix rotations wit UI.
@@ -196,4 +214,34 @@ public class PlayerController : MonoBehaviour
     }
 
     public List<PickupItem> GetInventoryItems() => inventoryList;
+
+    internal void UseItem(PickupType pickupType)
+    {
+        PickupItem item = inventoryList.Where(x => x.GetPickupType() == pickupType).First();
+        if (item == null) return;
+
+        switch (pickupType)
+        {
+            case PickupType.HealthPotion:
+                if (healthSystem.GetCurrentHealth() <= healthSystem.GetMaxHealth())
+                {
+                    healthSystem.IncreaseCurrentHealth(item.GetAmount());
+                    inventoryList.Remove(item);
+                    Destroy(item);
+                    if (isInventoryOpen)
+                        inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+                }
+                break;
+            case PickupType.SpeedPotion:
+                if (currentSpeed <= maxMovementSpeed)
+                {
+                    currentSpeed += item.GetAmount();
+                    inventoryList.Remove(item);
+                    Destroy(item);
+                    if (isInventoryOpen)
+                        inventoryUI.GetComponent<InventoryUI>().UpdateVisual();
+                }
+                break;
+        }
+    }
 }

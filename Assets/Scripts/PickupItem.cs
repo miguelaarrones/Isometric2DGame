@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,13 +11,13 @@ public class PickupItem : MonoBehaviour
 {
     [SerializeField] PickupType pickupType;
     [SerializeField] float amount;
-    [SerializeField] string itemName;
     [SerializeField] LayerMask playerLayer;
     [SerializeField] TextMeshProUGUI pickupText;
+    [SerializeField][TextArea(2, 10)] string tooltipText;
 
     public PickupType GetPickupType() => pickupType;
     public float GetAmount() => amount;
-    public string GetName() => itemName;
+    public string GetName() => pickupType.ToString();
 
     private void Update()
     {
@@ -41,4 +40,6 @@ public class PickupItem : MonoBehaviour
     public Sprite GetSprite() => transform.GetComponent<SpriteRenderer>().sprite;
 
     public Color GetColor() => transform.GetComponent<SpriteRenderer>().color;
+
+    public string GetTooltipText() => tooltipText;
 }

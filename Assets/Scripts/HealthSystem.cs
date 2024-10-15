@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,10 +26,20 @@ public class HealthSystem : MonoBehaviour
     }
 
     public float GetCurrentHealth() => currentHealth;
+    
+    public float GetMaxHealth() => maxHealth;
 
     public void DecreaseCurrentHealth(float amount)
     {
         currentHealth -= amount;
+        healthBar.fillAmount = currentHealth / maxHealth;
+    }
+
+    public void IncreaseCurrentHealth(float amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
 
         healthBar.fillAmount = currentHealth / maxHealth;
     }

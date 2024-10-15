@@ -30,6 +30,8 @@ public class InventoryUI : MonoBehaviour
             itemUI.image.sprite = item.GetSprite();
             itemUI.image.color = item.GetColor();
             itemUI.amount.SetText("Amount: 1");
+            itemUI.tooltipText.SetText(item.GetTooltipText());
+            itemUI.player = player;
         }
     }
 }

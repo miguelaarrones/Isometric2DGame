@@ -255,6 +255,7 @@ public class EnemyController : MonoBehaviour
 
     private void Die()
     {
+        AudioManager.Instance.Play("Enemy Death");
         Instantiate(deathVFX, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

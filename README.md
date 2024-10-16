@@ -21,7 +21,7 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Why? I think I'm underestimating my knowledge, It's been a few weeks without me touching anything related to Unity and I feel that I know more than I thought.
 
 - Basic Combat System: **7:00h**
-    - Did I completed the task as estimated? Yes, again, it took me less than expected. **Total time: 3:23**
+    - Did I completed the task as estimated? Yes, again, it took me less than expected. **Total time: 3:30**
     - Why? If I'm being honest, I'm actually fast prototyping everything, I think it will all add up in time once I start polishing and debugging.
 
 - Simple Inventory System: **5:00h**
@@ -35,3 +35,5 @@ For this test, it was required to create a workflow diagram showing the tasks th
 ## Polishing
 - First iteration time: **0:45h**
     - Did some code refactor and file organization to make everything more clear.
+- Second iteration time: **0:50h**
+    - I refactorized some code and made small changes.

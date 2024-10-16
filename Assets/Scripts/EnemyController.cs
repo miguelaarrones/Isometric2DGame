@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 enum State
@@ -16,6 +17,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float maxPatrolSpeed = 2f;
     [SerializeField] private bool followPath = false;
     [SerializeField] private List<Transform> path;
+    [SerializeField] private int pathlength;
 
     [Header("Detection Settings")]
     [SerializeField] private LayerMask playerLayer;
@@ -44,6 +46,7 @@ public class EnemyController : MonoBehaviour
     private HealthSystem healthSystem;
     
     private int currentPathPoint = 0;
+    private List<Transform> currentPath;
 
     private float hitTimer;
 
@@ -59,6 +62,8 @@ public class EnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         healthSystem = GetComponent<HealthSystem>();
+
+        RandomizePathPoints();
     }
 
     private void Update()
@@ -73,6 +78,7 @@ public class EnemyController : MonoBehaviour
                 if (followPath)
                 {
                     animator.SetBool("Idle", false);
+                    RandomizePathPoints();
                     state = State.Patrol;
                 }
                 else
@@ -132,21 +138,36 @@ public class EnemyController : MonoBehaviour
             Die();
     }
 
+    private void RandomizePathPoints()
+    {
+        currentPath = path.OrderBy(x => UnityEngine.Random.Range(0, 10)).Take(pathlength).ToList();
+    }
+
     private void FollowPath()
     {
-        if (path.Count < 0)
+        if (path.Count < 0 || currentPath.Count < 0)
         {
             state = State.Idle;
             return;
         }
 
-        Vector2 dir = (path[currentPathPoint].position - transform.position).normalized;
+        Vector2 dir = (currentPath[currentPathPoint].position - transform.position).normalized;
         Move(dir, maxPatrolSpeed);
-
-        if (Vector2.Distance(path[currentPathPoint].position, transform.position) < 0.1)
+        
+        if (Vector2.Distance(currentPath[currentPathPoint].position, transform.position) < 0.1)
         {
             currentPathPoint++;
-            currentPathPoint = currentPathPoint % path.Count;
+            currentPathPoint = currentPathPoint % currentPath.Count;
+
+            // If reached end of path
+            if (currentPathPoint % pathlength == 0)
+            {
+                // 50% chance of changing path
+                if (UnityEngine.Random.Range(0f, 1f) >= 0.5)
+                {
+                    RandomizePathPoints();
+                }
+            }
         }
     }
 

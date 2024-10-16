@@ -55,7 +55,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""attack"",
+                    ""name"": ""ranged_attack"",
                     ""type"": ""Button"",
                     ""id"": ""8a5c168d-a130-475e-b266-e07c1291d01b"",
                     ""expectedControlType"": ""Button"",
@@ -222,7 +222,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""attack"",
+                    ""action"": ""ranged_attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -247,6 +247,17 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
                     ""action"": ""inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44793e81-bb47-48d7-8c21-fe822e3e7772"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -258,7 +269,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         m_player_move = m_player.FindAction("move", throwIfNotFound: true);
         m_player_mouse = m_player.FindAction("mouse", throwIfNotFound: true);
         m_player_melee_attack = m_player.FindAction("melee_attack", throwIfNotFound: true);
-        m_player_attack = m_player.FindAction("attack", throwIfNotFound: true);
+        m_player_ranged_attack = m_player.FindAction("ranged_attack", throwIfNotFound: true);
         m_player_pickup = m_player.FindAction("pickup", throwIfNotFound: true);
         m_player_inventory = m_player.FindAction("inventory", throwIfNotFound: true);
     }
@@ -325,7 +336,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_move;
     private readonly InputAction m_player_mouse;
     private readonly InputAction m_player_melee_attack;
-    private readonly InputAction m_player_attack;
+    private readonly InputAction m_player_ranged_attack;
     private readonly InputAction m_player_pickup;
     private readonly InputAction m_player_inventory;
     public struct PlayerActions
@@ -335,7 +346,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         public InputAction @move => m_Wrapper.m_player_move;
         public InputAction @mouse => m_Wrapper.m_player_mouse;
         public InputAction @melee_attack => m_Wrapper.m_player_melee_attack;
-        public InputAction @attack => m_Wrapper.m_player_attack;
+        public InputAction @ranged_attack => m_Wrapper.m_player_ranged_attack;
         public InputAction @pickup => m_Wrapper.m_player_pickup;
         public InputAction @inventory => m_Wrapper.m_player_inventory;
         public InputActionMap Get() { return m_Wrapper.m_player; }
@@ -356,9 +367,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @melee_attack.started += instance.OnMelee_attack;
             @melee_attack.performed += instance.OnMelee_attack;
             @melee_attack.canceled += instance.OnMelee_attack;
-            @attack.started += instance.OnAttack;
-            @attack.performed += instance.OnAttack;
-            @attack.canceled += instance.OnAttack;
+            @ranged_attack.started += instance.OnRanged_attack;
+            @ranged_attack.performed += instance.OnRanged_attack;
+            @ranged_attack.canceled += instance.OnRanged_attack;
             @pickup.started += instance.OnPickup;
             @pickup.performed += instance.OnPickup;
             @pickup.canceled += instance.OnPickup;
@@ -378,9 +389,9 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
             @melee_attack.started -= instance.OnMelee_attack;
             @melee_attack.performed -= instance.OnMelee_attack;
             @melee_attack.canceled -= instance.OnMelee_attack;
-            @attack.started -= instance.OnAttack;
-            @attack.performed -= instance.OnAttack;
-            @attack.canceled -= instance.OnAttack;
+            @ranged_attack.started -= instance.OnRanged_attack;
+            @ranged_attack.performed -= instance.OnRanged_attack;
+            @ranged_attack.canceled -= instance.OnRanged_attack;
             @pickup.started -= instance.OnPickup;
             @pickup.performed -= instance.OnPickup;
             @pickup.canceled -= instance.OnPickup;
@@ -409,7 +420,7 @@ public partial class @PlayerInputAsset: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
         void OnMelee_attack(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
+        void OnRanged_attack(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
     }

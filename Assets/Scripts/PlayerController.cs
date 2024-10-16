@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer sprite;
 
     private PlayerInput playerInput;
-    private InputAction attackAction;
+    private InputAction rangedAttackAction;
     private InputAction meleeAttackAction;
     private InputAction pickupAction;
     private InputAction openInventoryAction;
@@ -59,13 +59,13 @@ public class PlayerController : MonoBehaviour
 
         // Find the action map and the attack actions
         var actionMap = playerInput.actions.FindActionMap("player");
-        attackAction = actionMap.FindAction("attack");
+        rangedAttackAction = actionMap.FindAction("ranged_attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
         pickupAction = actionMap.FindAction("pickup");
         openInventoryAction = actionMap.FindAction("inventory");
 
         // Subscribe to the performed events
-        attackAction.performed += OnAttack;
+        rangedAttackAction.performed += OnRangedAttack;
         meleeAttackAction.performed += OnMeleeAttack;
         pickupAction.performed += OnPickup;
         openInventoryAction.performed += OnOpenInventory;
@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour
         // RotateTowardsMouse();
     }
 
+    /* UNUSED FOR NOW */
     private void RotateTowardsMouse()
     {
         mousePos.z = 0;
@@ -138,7 +139,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private void OnAttack(InputAction.CallbackContext context)
+    private void OnRangedAttack(InputAction.CallbackContext context)
     {
         Bullet bullet = Instantiate(bulletPrefab, attackPoint.position, Quaternion.identity);
 
@@ -187,27 +188,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void OnDrawGizmos()
-    {
-        if (transform.position == null)
-            return;
-
-        Gizmos.color = Color.green;
-
-        // Draw a circle around the center object
-        float angleStep = 360f / 36;
-        Vector3 prevPoint = transform.position + new Vector3(pickupRadius, 0, 0);
-
-        for (int i = 1; i <= 36; i++)
-        {
-            float angle = i * angleStep * Mathf.Deg2Rad;
-            Vector3 newPoint = transform.position + new Vector3(Mathf.Cos(angle) * pickupRadius, Mathf.Sin(angle) * pickupRadius, 0);
-            Gizmos.DrawLine(prevPoint, newPoint);
-            prevPoint = newPoint;
-        }
-    }
-
     public void Hit(float damage)
     {
         healthSystem.DecreaseCurrentHealth(damage);
@@ -215,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
     public List<PickupItem> GetInventoryItems() => inventoryList;
 
-    internal void UseItem(PickupType pickupType)
+    public void UseItem(PickupType pickupType)
     {
         PickupItem item = inventoryList.Where(x => x.GetPickupType() == pickupType).First();
         if (item == null) return;

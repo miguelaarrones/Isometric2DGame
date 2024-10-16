@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private float meleeDamage = 4f;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private ParticleSystem meleeAttackVFX;
 
     [Header("Other Settings")]
     [SerializeField] private float pickupRadius = 1f;
@@ -156,6 +157,7 @@ public class PlayerController : MonoBehaviour
         if (hit)
         {
             hit.transform.GetComponent<EnemyController>().Hit(meleeDamage);
+            meleeAttackVFX.Play();
         }
     }
 

@@ -23,6 +23,9 @@ public class HealthSystem : MonoBehaviour
     private void Update()
     {
         background.position = transform.position + positionOffset;
+
+        Quaternion rotationOffset = Quaternion.Euler(0, 0, 45);
+        background.rotation = Quaternion.identity * rotationOffset;
     }
 
     public float GetCurrentHealth() => currentHealth;

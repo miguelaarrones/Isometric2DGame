@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour
         // RotateTowardsMouse();
     }
 
+    /* UNUSED FOR NOW */
     private void RotateTowardsMouse()
     {
         mousePos.z = 0;
@@ -187,27 +188,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void OnDrawGizmos()
-    {
-        if (transform.position == null)
-            return;
-
-        Gizmos.color = Color.green;
-
-        // Draw a circle around the center object
-        float angleStep = 360f / 36;
-        Vector3 prevPoint = transform.position + new Vector3(pickupRadius, 0, 0);
-
-        for (int i = 1; i <= 36; i++)
-        {
-            float angle = i * angleStep * Mathf.Deg2Rad;
-            Vector3 newPoint = transform.position + new Vector3(Mathf.Cos(angle) * pickupRadius, Mathf.Sin(angle) * pickupRadius, 0);
-            Gizmos.DrawLine(prevPoint, newPoint);
-            prevPoint = newPoint;
-        }
-    }
-
     public void Hit(float damage)
     {
         healthSystem.DecreaseCurrentHealth(damage);
@@ -215,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
     public List<PickupItem> GetInventoryItems() => inventoryList;
 
-    internal void UseItem(PickupType pickupType)
+    public void UseItem(PickupType pickupType)
     {
         PickupItem item = inventoryList.Where(x => x.GetPickupType() == pickupType).First();
         if (item == null) return;

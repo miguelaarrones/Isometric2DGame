@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,6 +67,8 @@ public class EnemyController : MonoBehaviour
         {
             case State.Idle:
                 animator.SetBool("Idle", true);
+                rb.velocity = Vector3.zero;
+                ResetSuperSpeed();
 
                 if (followPath)
                 {
@@ -83,6 +86,7 @@ public class EnemyController : MonoBehaviour
                 break;
             case State.Patrol:
                 animator.SetBool("Patrol", true);
+                ResetSuperSpeed();
 
                 FollowPath();
                 if (CheckPlayerInDetectionRadius())
@@ -95,24 +99,28 @@ public class EnemyController : MonoBehaviour
                 animator.SetBool("Chase", true);
 
                 ChasePlayer();
+
+                if (CheckPlayerInAttackRadius())
+                {
+                    animator.SetBool("Chase", false);
+                    state = State.Attack;
+                }
+
                 if (!CheckPlayerInDetectionRadius())
                 {
                     animator.SetBool("Chase", false);
-                    
-                    rb.velocity = Vector3.zero;
                     state = State.Idle;
                 }
                 break;
             case State.Attack:
                 animator.SetBool("Attack", true);
+                ResetSuperSpeed();
 
                 Attack();
-                if (!CheckPlayerInDetectionRadius())
+                if (!CheckPlayerInAttackRadius())
                 {
                     animator.SetBool("Attack", false);
-                    
-                    rb.velocity = Vector3.zero;
-                    state = State.Idle;
+                    state = State.Chase;
                 }
                 break;
             default:
@@ -122,20 +130,6 @@ public class EnemyController : MonoBehaviour
 
         if (healthSystem.GetCurrentHealth() <= 0)
             Die();
-
-        // Ability timers
-        superSpeedActivationTimer += Time.deltaTime;
-        if (superSpeedActivationTimer > superSpeedActivation)
-        {
-            isSuperSpeedActivated = true;
-            superSpeedAbilityTimer += Time.deltaTime;
-            if (superSpeedAbilityTimer > superSpeedAbilityDuration)
-            {
-                isSuperSpeedActivated = false;
-                superSpeedActivationTimer = 0;
-                superSpeedAbilityTimer = 0;
-            }
-        }
     }
 
     private void FollowPath()
@@ -173,7 +167,11 @@ public class EnemyController : MonoBehaviour
             player = null;
             return false;
         }
+    }
 
+    private bool CheckPlayerInAttackRadius()
+    {
+        return Vector2.Distance(player.transform.position, transform.position) <= attackRadius;
     }
 
     private void ChasePlayer()
@@ -181,21 +179,23 @@ public class EnemyController : MonoBehaviour
         Vector2 dir = (player.transform.position - transform.position).normalized;
         Move(dir, movementSpeed);
 
-        // Player inside attack radius
-        if (Vector2.Distance(player.transform.position, transform.position) <= attackRadius)
-        {
-            state = State.Attack;
-            animator.SetBool("Chase", false);
-            rb.velocity = Vector2.zero;
-        }
-
         if (isSuperSpeedActivated)
         {
-            SuperSpeedAbility();
+            superSpeedAbilityTimer += Time.deltaTime;
+            if (superSpeedAbilityTimer > superSpeedAbilityDuration)
+            {
+                ResetSuperSpeed();
+            }
         }
         else
         {
-            movementSpeed = 5f;
+            // Check if it can activate the ability, it will reset to 0 each time it enters chase mode, so enemy will only charge ability when chasing.
+            superSpeedActivationTimer += Time.deltaTime;
+            if (superSpeedActivationTimer > superSpeedActivation)
+            {
+                isSuperSpeedActivated = true;
+                movementSpeed = superSpeedAbilityAmount;
+            }
         }
 
         // TODO: Fix rotations and UI
@@ -203,9 +203,12 @@ public class EnemyController : MonoBehaviour
         //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private void SuperSpeedAbility()
+    private void ResetSuperSpeed()
     {
-        movementSpeed = superSpeedAbilityAmount;
+        isSuperSpeedActivated = false;
+        superSpeedActivationTimer = 0;
+        superSpeedAbilityTimer = 0;
+        movementSpeed = 5f;
     }
 
     private void Move(Vector2 dir, float speed)

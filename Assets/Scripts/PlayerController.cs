@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer sprite;
 
     private PlayerInput playerInput;
-    private InputAction attackAction;
+    private InputAction rangedAttackAction;
     private InputAction meleeAttackAction;
     private InputAction pickupAction;
     private InputAction openInventoryAction;
@@ -59,13 +59,13 @@ public class PlayerController : MonoBehaviour
 
         // Find the action map and the attack actions
         var actionMap = playerInput.actions.FindActionMap("player");
-        attackAction = actionMap.FindAction("attack");
+        rangedAttackAction = actionMap.FindAction("ranged_attack");
         meleeAttackAction = actionMap.FindAction("melee_attack");
         pickupAction = actionMap.FindAction("pickup");
         openInventoryAction = actionMap.FindAction("inventory");
 
         // Subscribe to the performed events
-        attackAction.performed += OnAttack;
+        rangedAttackAction.performed += OnRangedAttack;
         meleeAttackAction.performed += OnMeleeAttack;
         pickupAction.performed += OnPickup;
         openInventoryAction.performed += OnOpenInventory;
@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private void OnAttack(InputAction.CallbackContext context)
+    private void OnRangedAttack(InputAction.CallbackContext context)
     {
         Bullet bullet = Instantiate(bulletPrefab, attackPoint.position, Quaternion.identity);
 

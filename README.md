@@ -37,6 +37,8 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Did some code refactor and file organization to make everything more clear.
 - Second iteration time: **0:50h**
     - I refactorized some code and made small changes.
+- Third iteration time: **1:13**
+    - Added Sounds, Post Processing and a Main Menu. Had to include the old input system to the project for managing the two simple buttons from the Main Menu.
 
 ## Assets used
 - Sound effects made with [jsfxr](https://sfxr.me).

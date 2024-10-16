@@ -17,7 +17,7 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Why? The project is a protoype so I'm not polishing it a lot. And also, setting up the isometric view in 2D was easier than I expected if I did it correctly.
 
 - AI State Machine for Enemy Behavior: **6:00h**
-    - Did I completed the task as estimated? I took me less then expected to get the state machine working with one of the bonus tasks done. I will come back to the left bonus tasks and see how much will it take for me to complete them. **Total time: 1:30h**
+    - Did I completed the task as estimated? I took me less then expected to get the state machine working with one of the bonus tasks done. I will come back to the left bonus tasks and see how much will it take for me to complete them. **Total time: 2:30h**
     - Why? I think I'm underestimating my knowledge, It's been a few weeks without me touching anything related to Unity and I feel that I know more than I thought.
 
 - Basic Combat System: **7:00h**

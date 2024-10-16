@@ -142,6 +142,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnRangedAttack(InputAction.CallbackContext context)
     {
+        AudioManager.Instance.Play("Player Ranged Attack");
+
         Bullet bullet = Instantiate(bulletPrefab, attackPoint.position, Quaternion.identity);
 
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -153,16 +155,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnMeleeAttack(InputAction.CallbackContext context)
     {
+        AudioManager.Instance.Play("Player Melee Attack");
+        meleeAttackVFX.Play();
+
         RaycastHit2D hit = Physics2D.CircleCast(attackPoint.position, 1f, Vector3.zero, 10f, enemyLayer);
         if (hit)
         {
             hit.transform.GetComponent<EnemyController>().Hit(meleeDamage);
-            meleeAttackVFX.Play();
         }
     }
 
     private void OnPickup(InputAction.CallbackContext context)
     {
+        AudioManager.Instance.Play("Player Pickup");
+
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1f, Vector3.zero, 10f, pickupLayer);
         if (hit)
         {
@@ -192,6 +198,8 @@ public class PlayerController : MonoBehaviour
 
     public void Hit(float damage)
     {
+        AudioManager.Instance.Play("Player Hit");
+
         healthSystem.DecreaseCurrentHealth(damage);
     }
 

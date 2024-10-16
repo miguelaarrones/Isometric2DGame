@@ -37,3 +37,7 @@ For this test, it was required to create a workflow diagram showing the tasks th
     - Did some code refactor and file organization to make everything more clear.
 - Second iteration time: **0:50h**
     - I refactorized some code and made small changes.
+
+## Assets used
+- Sound effects made with [jsfxr](https://sfxr.me).
+- Main theme **Retro Platforming** by David Fesliyan from [Fesliyan Studios](https://www.fesliyanstudios.com).

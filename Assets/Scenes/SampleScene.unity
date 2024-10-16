@@ -9202,6 +9202,93 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1281291614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
+--- !u!1 &1935470324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1935470325}
+  - component: {fileID: 1935470326}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1935470325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935470324}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2104992471}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1935470326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935470324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189018dcd2d1ea8499686b1d540b9165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Main Theme
+    clip: {fileID: 8300000, guid: 70df1d22e6f88624f9d7515e4e6893ec, type: 3}
+    volume: 0.6
+    pitch: 1
+    loop: 1
+    playOnAwake: 1
+    source: {fileID: 0}
+  - name: Player Pickup
+    clip: {fileID: 8300000, guid: 3ad071aca9798f446a43461940559cd5, type: 3}
+    volume: 1
+    pitch: 0.1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Enemy Death
+    clip: {fileID: 8300000, guid: 4476c7d5cea9f13498cd25124a4b409a, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Player Melee Attack
+    clip: {fileID: 8300000, guid: 60a94d5de668bdb4bac553ece1b01562, type: 3}
+    volume: 0.65
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Player Ranged Attack
+    clip: {fileID: 8300000, guid: 5fdab53ea7ded1045a85792fd6d8e4e2, type: 3}
+    volume: 0.75
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Player Hit
+    clip: {fileID: 8300000, guid: e93db06d6a7868a49a4a84e34876e399, type: 3}
+    volume: 0.65
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
 --- !u!1 &1960824595
 GameObject:
   m_ObjectHideFlags: 0
@@ -9463,6 +9550,7 @@ Transform:
   - {fileID: 1758796673}
   - {fileID: 619394802}
   - {fileID: 767085285}
+  - {fileID: 1935470325}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2140030765
@@ -9607,6 +9695,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 420904606295115217, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 420904606295115217, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionId
+      value: 2f739fff-2f21-4919-adf1-cfa259ccadc5
+      objectReference: {fileID: 0}
+    - target: {fileID: 420904606295115217, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: 62433b5d-3e1a-4424-bd3e-68b528f885bf
+      objectReference: {fileID: 0}
+    - target: {fileID: 420904606295115217, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionName
+      value: player/pickup[/Keyboard/e]
+      objectReference: {fileID: 0}
+    - target: {fileID: 420904606295115217, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: player/inventory[/Keyboard/i,/Keyboard/escape]
+      objectReference: {fileID: 0}
     - target: {fileID: 1427948874531711784, guid: a7f2e35437e7e6140ac1a89c7591bbf2, type: 3}
       propertyPath: m_Name
       value: Player

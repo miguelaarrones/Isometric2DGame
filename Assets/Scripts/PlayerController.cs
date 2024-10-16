@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = velocity;
 
         // TODO: Fix rotations wit UI.
-        // RotateTowardsMouse();
+        RotateTowardsMouse();
     }
 
     /* UNUSED FOR NOW */

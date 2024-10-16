@@ -143,10 +143,6 @@ public class EnemyController : MonoBehaviour
         Vector2 dir = (path[currentPathPoint].position - transform.position).normalized;
         Move(dir, maxPatrolSpeed);
 
-        // TODO: Fix rotations and UI
-        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
         if (Vector2.Distance(path[currentPathPoint].position, transform.position) < 0.1)
         {
             currentPathPoint++;
@@ -197,10 +193,6 @@ public class EnemyController : MonoBehaviour
                 movementSpeed = superSpeedAbilityAmount;
             }
         }
-
-        // TODO: Fix rotations and UI
-        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void ResetSuperSpeed()
@@ -215,6 +207,9 @@ public class EnemyController : MonoBehaviour
     {
         Vector2 velocity = dir * speed;
         rb.velocity = velocity;
+
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     private void Attack()

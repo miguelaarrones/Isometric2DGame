@@ -11962,7 +11962,7 @@ MonoBehaviour:
   sounds:
   - name: Main Theme
     clip: {fileID: 8300000, guid: 70df1d22e6f88624f9d7515e4e6893ec, type: 3}
-    volume: 0
+    volume: 0.2
     pitch: 1
     loop: 1
     playOnAwake: 1
@@ -11976,14 +11976,14 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Enemy Death
     clip: {fileID: 8300000, guid: 4476c7d5cea9f13498cd25124a4b409a, type: 3}
-    volume: 0.5
+    volume: 0.3
     pitch: 1
     loop: 0
     playOnAwake: 0
     source: {fileID: 0}
   - name: Player Melee Attack
     clip: {fileID: 8300000, guid: 60a94d5de668bdb4bac553ece1b01562, type: 3}
-    volume: 0.65
+    volume: 0.3
     pitch: 1
     loop: 0
     playOnAwake: 0
